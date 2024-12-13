@@ -97,35 +97,6 @@
 		};
 	};
 
-	pcie0_rc: pcie@f102000 {
-		compatible = "ti,j722s-pcie-host", "ti,j721e-pcie-host";
-		reg = <0x00 0x0f102000 0x00 0x1000>,
-		      <0x00 0x0f100000 0x00 0x400>,
-		      <0x00 0x0d000000 0x00 0x00800000>,
-		      <0x00 0x68000000 0x00 0x00001000>;
-		reg-names = "intd_cfg", "user_cfg", "reg", "cfg";
-		ranges = <0x01000000 0x00 0x68001000  0x00 0x68001000  0x00 0x0010000>,
-			 <0x02000000 0x00 0x68011000  0x00 0x68011000  0x00 0x7fef000>;
-		dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>;
-		interrupt-names = "link_state";
-		interrupts = <GIC_SPI 99 IRQ_TYPE_EDGE_RISING>;
-		device_type = "pci";
-		max-link-speed = <3>;
-		num-lanes = <1>;
-		power-domains = <&k3_pds 259 TI_SCI_PD_EXCLUSIVE>;
-		clocks = <&k3_clks 259 0>, <&serdes1 CDNS_TORRENT_REFCLK_DRIVER>;
-		clock-names = "fck", "pcie_refclk";
-		#address-cells = <3>;
-		#size-cells = <2>;
-		bus-range = <0x0 0xff>;
-		vendor-id = <0x104c>;
-		device-id = <0xb010>;
-		cdns,no-bar-match-nbits = <64>;
-		ti,syscon-pcie-ctrl = <&pcie0_ctrl 0x0>;
-		msi-map = <0x0 &gic_its 0x0 0x10000>;
-		status = "disabled";
-	};
-
 	usbss1: usb@f920000 {
 		compatible = "ti,j721e-usb";
 		reg = <0x00 0x0f920000 0x00 0x100>;
@@ -343,68 +314,9 @@
 		power-domains = <&k3_pds 253 TI_SCI_PD_EXCLUSIVE>;
 		status = "disabled";
 	};
-
-	main_r5fss0: r5fss@78400000 {
-		compatible = "ti,am62-r5fss";
-		#address-cells = <1>;
-		#size-cells = <1>;
-		ranges = <0x78400000 0x00 0x78400000 0x8000>,
-			 <0x78500000 0x00 0x78500000 0x8000>;
-		power-domains = <&k3_pds 261 TI_SCI_PD_EXCLUSIVE>;
-		status = "disabled";
-
-		main_r5fss0_core0: r5f@78400000 {
-			compatible = "ti,am62-r5f";
-			reg = <0x78400000 0x00008000>,
-			      <0x78500000 0x00008000>;
-			reg-names = "atcm", "btcm";
-			ti,sci = <&dmsc>;
-			ti,sci-dev-id = <262>;
-			ti,sci-proc-ids = <0x04 0xff>;
-			resets = <&k3_reset 262 1>;
-			firmware-name = "j722s-main-r5f0_0-fw";
-			ti,atcm-enable = <1>;
-			ti,btcm-enable = <1>;
-			ti,loczrama = <1>;
-		};
-	};
-
-	c7x_0: dsp@7e000000 {
-		compatible = "ti,j722s-c7xv-dsp";
-		reg = <0x00 0x7e000000 0x00 0x00200000>;
-		reg-names = "l2sram";
-		ti,sci = <&dmsc>;
-		ti,sci-dev-id = <208>;
-		ti,sci-proc-ids = <0x30 0xff>;
-		resets = <&k3_reset 208 1>;
-		firmware-name = "j722s-c71_0-fw";
-		status = "disabled";
-	};
-
-	c7x_1: dsp@7e200000 {
-		compatible = "ti,j722s-c7xv-dsp";
-		reg = <0x00 0x7e200000 0x00 0x00200000>;
-		reg-names = "l2sram";
-		ti,sci = <&dmsc>;
-		ti,sci-dev-id = <268>;
-		ti,sci-proc-ids = <0x31 0xff>;
-		resets = <&k3_reset 268 1>;
-		firmware-name = "j722s-c71_1-fw";
-		status = "disabled";
-	};
 };
 
 /* MCU domain overrides */
-
-&mcu_r5fss0_core0 {
-	firmware-name = "j722s-mcu-r5f0_0-fw";
-};
-
-/* Wakeup domain overrides */
-
-&wkup_r5fss0_core0 {
-	firmware-name = "j722s-wkup-r5f0_0-fw";
-};
 
 &main_conf {
 	serdes_ln_ctrl: mux-controller@4080 {

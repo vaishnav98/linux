@@ -26,7 +26,15 @@
 	};
 
 	chosen {
-		stdout-path = &main_uart0;
+		#address-cells = <0x01>;
+		#size-cells = <0x01>;
+		xen,xen-bootargs = "dom0_mem=1G console=dtuart dtuart=/bus@f0000/serial@2850000:clock-hz=48000000 conswitch=sx";
+		xen,dom0-bootargs = "console=ttyS2,115200n8 earlycon=ns16550a,mmio32,0x02800000 root=/dev/mmcblk1p2 rw rootfstype=ext4 rootwait clk_ignore_unused";
+
+		dom0 {
+			compatible = "xen,linux-zimage\0xen,multiboot-module";
+			reg = <0x82000000 0x29CEA00>;
+		};
 	};
 
 	memory@80000000 {
@@ -479,7 +487,7 @@
 &main_uart5 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_uart5_pins_default>;
-	status = "reserved";
+	status = "okay";
 };
 
 &mcu_pmx0 {
